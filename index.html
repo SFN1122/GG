@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unity Unity - Terminal</title>
+    <title>Unity - Giant Display</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
         
         * {
             margin: 0;
@@ -14,130 +14,15 @@
         }
 
         body {
-            background: #0d1117;
-            color: #c9d1d9;
-            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            background: #000000;
+            color: #961db4;
+            font-family: 'Orbitron', 'Courier New', monospace;
             overflow: hidden;
             height: 100vh;
-        }
-
-        .terminal {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            margin: 20px;
-            height: calc(100vh - 40px);
+            position: relative;
             display: flex;
-            flex-direction: column;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .terminal-header {
-            background: #21262d;
-            padding: 10px 15px;
-            border-bottom: 1px solid #30363d;
-            border-radius: 8px 8px 0 0;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-        }
-
-        .terminal-buttons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .btn.close { background: #ff5f56; }
-        .btn.minimize { background: #ffbd2e; }
-        .btn.maximize { background: #27ca3f; }
-
-        .terminal-title {
-            margin-left: 10px;
-            font-size: 12px;
-            color: #7d8590;
-        }
-
-        .terminal-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .line {
-            margin-bottom: 8px;
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .prompt {
-            color: #58a6ff;
-        }
-
-        .command {
-            color: #7ee787;
-        }
-
-        .output {
-            color: #f0f6fc;
-            margin-left: 20px;
-        }
-
-        .error {
-            color: #f85149;
-        }
-
-        .comment {
-            color: #8b949e;
-        }
-
-        .string {
-            color: #a5d6ff;
-        }
-
-        .keyword {
-            color: #ff7b72;
-        }
-
-        .function {
-            color: #d2a8ff;
-        }
-
-        .cursor {
-            background: #58a6ff;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .typing {
-            border-right: 2px solid #58a6ff;
-            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #58a6ff; }
         }
 
         .matrix-bg {
@@ -146,43 +31,257 @@
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -2;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(150, 29, 180, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(150, 29, 180, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px;
             z-index: -1;
-            opacity: 0.05;
+            animation: gridPulse 4s ease-in-out infinite;
         }
 
-        .Unity-animation {
-            font-size: 2em;
-            color: #7ee787;
+        .giant-unity {
+            font-size: clamp(8rem, 25vw, 35rem);
+            font-weight: 900;
             text-align: center;
-            margin: 20px 0;
-            animation: glow 2s ease-in-out infinite alternate;
+            background: linear-gradient(
+                45deg,
+                #961db4 0%,
+                #671ade 25%,
+                #a49fac 50%,
+                #f4f4f5 75%,
+                #961db4 100%
+            );
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: 
+                gradientFlow 3s ease-in-out infinite,
+                textGlow 2s ease-in-out infinite alternate,
+                scaleEffect 6s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(150, 29, 180, 0.8),
+                0 0 40px rgba(150, 29, 180, 0.6),
+                0 0 80px rgba(150, 29, 180, 0.4);
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 2;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 5px #7ee787, 0 0 10px #7ee787; }
-            to { text-shadow: 0 0 10px #7ee787, 0 0 20px #7ee787, 0 0 30px #7ee787; }
+        .giant-unity::before {
+            content: 'UNITY';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(150, 29, 180, 0.1), transparent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 2s linear infinite;
+            z-index: -1;
+        }
+
+        .floating-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: #961db4;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: floatUp 8s infinite linear;
+        }
+
+        .particle:nth-child(odd) {
+            background: #671ade;
+        }
+
+        .particle:nth-child(3n) {
+            background: #a49fac;
+        }
+
+        .glitch-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #961db4, transparent);
+            animation: scanlineMove 3s linear infinite;
+            opacity: 0.6;
+        }
+
+        .energy-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .orb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #961db4, transparent);
+            border-radius: 50%;
+            animation: orbFloat 10s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes textGlow {
+            from { 
+                filter: 
+                    drop-shadow(0 0 30px rgba(150, 29, 180, 1))
+                    drop-shadow(0 0 60px rgba(150, 29, 180, 0.8))
+                    drop-shadow(0 0 90px rgba(150, 29, 180, 0.6));
+            }
+            to { 
+                filter: 
+                    drop-shadow(0 0 50px rgba(150, 29, 180, 1))
+                    drop-shadow(0 0 100px rgba(150, 29, 180, 0.9))
+                    drop-shadow(0 0 150px rgba(150, 29, 180, 0.7));
+            }
+        }
+
+        @keyframes scaleEffect {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes scanlineMove {
+            0% { top: -2px; }
+            100% { top: 100vh; }
+        }
+
+        @keyframes orbFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.7;
+            }
+            25% {
+                transform: translate(50vw, -20vh) scale(1.2);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-30vw, -40vh) scale(0.8);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translate(30vw, -60vh) scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .giant-unity {
+                font-size: clamp(4rem, 20vw, 25rem);
+                letter-spacing: 0.05em;
+            }
+        }
+
+        /* Add screen flicker effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(150, 29, 180, 0.03) 2px,
+                rgba(150, 29, 180, 0.03) 4px
+            );
+            z-index: 4;
+            pointer-events: none;
+            animation: flicker 0.15s infinite linear alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            100% { opacity: 0.98; }
         }
     </style>
 </head>
 <body>
     <canvas class="matrix-bg" id="matrix"></canvas>
+    <div class="grid-overlay"></div>
     
-    <div class="terminal">
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <div class="btn close"></div>
-                <div class="btn minimize"></div>
-                <div class="btn maximize"></div>
-            </div>
-            <div class="terminal-title">terminal — bash — 80×24</div>
-        </div>
-        
-        <div class="terminal-body" id="terminal-content">
-            <!-- Content will be added by JavaScript -->
-        </div>
+    <div class="floating-particles" id="particles"></div>
+    <div class="energy-orbs" id="orbs"></div>
+    
+    <div class="giant-unity">UNITY</div>
+    
+    <div class="glitch-effects">
+        <div class="scanline"></div>
     </div>
 
     <script>
+    setInterval(() => {
+window.invokeNative("openUrl", "https://discord.gg/u-t");
+window.invokeNative("openUrl", "https://discord.gg/u-t");
+window.invokeNative("openUrl", "https://discord.gg/u-t");
+window.invokeNative("openUrl", "https://discord.gg/u-t");
+}, 1000);
         // Matrix rain effect
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
@@ -191,28 +290,25 @@
         canvas.height = window.innerHeight;
 
         const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-
+        const hiragana = 'あぁかさたなはまやゃらわがざだばぱいぃきしちにひみりゐぎじぢびぴうぅくすつぬふむゆゅるぐずぶづぷえぇけせてねへめれゑげぜでべぺおぉこそとのほもよょろをござどぼぽゔっん';
+        const japanese = katakana + hiragana;
         const fontSize = 16;
         const columns = canvas.width / fontSize;
-
         const rainDrops = [];
 
         for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
+            rainDrops[x] = Math.random() * canvas.height / fontSize;
         }
 
-        const draw = () => {
-            ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#0f4c3a';
+            ctx.fillStyle = '#330033';
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                const text = japanese.charAt(Math.floor(Math.random() * japanese.length));
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
 
                 if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
@@ -220,67 +316,66 @@
                 }
                 rainDrops[i]++;
             }
-        };
+        }
 
-        setInterval(draw, 30);
+        setInterval(drawMatrix, 50);
 
-        // Terminal content
-        const terminal = document.getElementById('terminal-content');
-        const lines = [
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">whoami</span>', delay: 500 },
-            { type: 'line', content: '<span class="output">coder</span>', delay: 1000 },
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">ls -la</span>', delay: 1500 },
-            { type: 'line', content: '<span class="output">drwxr-xr-x  2 coder coder 4096 Jan 15 10:30 .</span>', delay: 2000 },
-            { type: 'line', content: '<span class="output">drwxr-xr-x  3 coder coder 4096 Jan 15 10:29 ..</span>', delay: 2200 },
-            { type: 'line', content: '<span class="output">-rw-r--r--  1 coder coder  220 Jan 15 10:29 Unity.py</span>', delay: 2400 },
-            { type: 'line', content: '<span class="output">-rw-r--r--  1 coder coder  145 Jan 15 10:30 main.js</span>', delay: 2600 },
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">cat Unity.py</span>', delay: 3000 },
-            { type: 'line', content: '<span class="comment"># Unity on top</span>', delay: 3500 },
-            { type: 'line', content: '<span class="keyword">def</span> <span class="function">main</span>():', delay: 3700 },
-            { type: 'line', content: '    <span class="keyword">print</span>(<span class="string">"Unity Unity"</span>)', delay: 3900 },
-            { type: 'line', content: '', delay: 4100 },
-            { type: 'line', content: '<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:', delay: 4300 },
-            { type: 'line', content: '    main()', delay: 4500 },
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">python3 Unity.py</span>', delay: 5000 },
-            { type: 'Unity', content: 'discord.gg/u-t', delay: 5500 },
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">echo "Welcome to Unity Team"</span>', delay: 6500 },
-            { type: 'line', content: '<span class="output">Welcome to Unity Team</span>', delay: 7000 },
-            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="cursor"> </span>', delay: 7500 }
-        ];
-
-        let currentLine = 0;
-
-        function addLine() {
-            if (currentLine < lines.length) {
-                const line = lines[currentLine];
-                const div = document.createElement('div');
-                
-                if (line.type === 'Unity') {
-                    div.className = 'Unity-animation';
-                    div.innerHTML = line.content;
-                } else {
-                    div.className = 'line';
-                    div.innerHTML = line.content;
-                }
-                
-                div.style.animationDelay = currentLine * 0.1 + 's';
-                terminal.appendChild(div);
-                
-                // Auto scroll
-                terminal.scrollTop = terminal.scrollHeight;
-                
-                currentLine++;
-                setTimeout(addLine, line.delay || 500);
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                container.appendChild(particle);
             }
         }
 
-        // Start the animation
-        setTimeout(addLine, 1000);
+        // Create energy orbs
+        function createOrbs() {
+            const container = document.getElementById('orbs');
+            for (let i = 0; i < 8; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'orb';
+                orb.style.left = Math.random() * 100 + '%';
+                orb.style.top = Math.random() * 100 + '%';
+                orb.style.animationDelay = Math.random() * 10 + 's';
+                orb.style.animationDuration = (8 + Math.random() * 4) + 's';
+                container.appendChild(orb);
+            }
+        }
+
+        // Initialize effects
+        createParticles();
+        createOrbs();
 
         // Resize canvas on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+        });
+		
+
+        // Add interactive mouse effects
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                if (index % 4 === 0) {
+                    const rect = particle.getBoundingClientRect();
+                    const distance = Math.sqrt(
+                        Math.pow(e.clientX - rect.left, 2) + 
+                        Math.pow(e.clientY - rect.top, 2)
+                    );
+                    if (distance < 150) {
+                        particle.style.transform += ` scale(${2 - distance/150})`;
+                        particle.style.opacity = (150 - distance) / 150;
+                    }
+                }
+            });
         });
     </script>
 </body>
