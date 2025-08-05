@@ -3,77 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>discord.gg/uaee</title>
+    <title>Unity Unity - Terminal</title>
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://cdn.discordapp.com/icons/1399836543304204328/a_9a395988ebd4748a44129faadc36a561.gif?size=1024') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Courier New', Courier, monospace;
-            color: #0000ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            overflow: hidden;
             height: 100vh;
+        }
+
+        .terminal {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            margin: 20px;
+            height: calc(100vh - 40px);
+            display: flex;
             flex-direction: column;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background: #21262d;
+            padding: 10px 15px;
+            border-bottom: 1px solid #30363d;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .btn.close { background: #ff5f56; }
+        .btn.minimize { background: #ffbd2e; }
+        .btn.maximize { background: #27ca3f; }
+
+        .terminal-title {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #7d8590;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .line {
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .prompt {
+            color: #58a6ff;
+        }
+
+        .command {
+            color: #7ee787;
+        }
+
+        .output {
+            color: #f0f6fc;
+            margin-left: 20px;
+        }
+
+        .error {
+            color: #f85149;
+        }
+
+        .comment {
+            color: #8b949e;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+
+        .keyword {
+            color: #ff7b72;
+        }
+
+        .function {
+            color: #d2a8ff;
+        }
+
+        .cursor {
+            background: #58a6ff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .typing {
+            border-right: 2px solid #58a6ff;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #58a6ff; }
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+        }
+
+        .Unity-animation {
+            font-size: 2em;
+            color: #7ee787;
             text-align: center;
+            margin: 20px 0;
+            animation: glow 2s ease-in-out infinite alternate;
         }
-        .image-container img {
-            width: 750px; 
-            height: auto;
-            border: 2px solid #0000ff; 
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 255, 0.7); 
-        }
-        .info {
-            margin-top: 20px;
-            font-size: 1.5em;
-            color: #0000ff; 
-            text-shadow: 0px 0px 8px #0000ff, 0px 0px 15px #0000ff, 0px 0px 25px #0000ff; 
-            letter-spacing: 4.5px; 
-            white-space: pre-wrap;
-        }
-        .text {
-            margin-top: 20px;
-            font-size: 3em; 
-            color: #0000ff; 
-            text-shadow: 0px 0px 8px #0000ff, 0px 0px 15px #0000ff, 0px 0px 25px #0000ff; 
-            letter-spacing: 4.5px; 
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #7ee787, 0 0 10px #7ee787; }
+            to { text-shadow: 0 0 10px #7ee787, 0 0 20px #7ee787, 0 0 30px #7ee787; }
         }
     </style>
 </head>
 <body>
-    <div class="image-container">
-        <img src="https://l.top4top.io/p_32131zd9t1.png" alt="Discord Image">
+    <canvas class="matrix-bg" id="matrix"></canvas>
+    
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="btn close"></div>
+                <div class="btn minimize"></div>
+                <div class="btn maximize"></div>
+            </div>
+            <div class="terminal-title">terminal — bash — 80×24</div>
+        </div>
+        
+        <div class="terminal-body" id="terminal-content">
+            <!-- Content will be added by JavaScript -->
+        </div>
     </div>
-    <audio autoplay loop>
-        <source src="https://raw.githubusercontent.com/SFN1122/GG/main/[FILENAME].mp3" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
-    <div class="info" id="ip-info">
-        <span><strong>City:</strong> <span id="city"></span></span><br>
-        <span><strong>Region:</strong> <span id="region"></span></span><br>
-        <span><strong>Country:</strong> <span id="country"></span></span><br>
-        <span><strong>Organization:</strong> <span id="org"></span></span><br>
-        <span><strong>Timezone:</strong> <span id="timezone"></span></span>
-    </div>
-    <div class="text">discord.gg/u-t</div>
 
     <script>
-         fetch('https://ipinfo.io/json')
-        .then(response => response.json())
-        .then(data => {
-            delete data.readme;
-            const infoDiv = document.getElementById('ip-info');
-            infoDiv.textContent = JSON.stringify(data, null, 2);
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f4c3a';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(draw, 30);
+
+        // Terminal content
+        const terminal = document.getElementById('terminal-content');
+        const lines = [
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">whoami</span>', delay: 500 },
+            { type: 'line', content: '<span class="output">coder</span>', delay: 1000 },
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">ls -la</span>', delay: 1500 },
+            { type: 'line', content: '<span class="output">drwxr-xr-x  2 coder coder 4096 Jan 15 10:30 .</span>', delay: 2000 },
+            { type: 'line', content: '<span class="output">drwxr-xr-x  3 coder coder 4096 Jan 15 10:29 ..</span>', delay: 2200 },
+            { type: 'line', content: '<span class="output">-rw-r--r--  1 coder coder  220 Jan 15 10:29 Unity.py</span>', delay: 2400 },
+            { type: 'line', content: '<span class="output">-rw-r--r--  1 coder coder  145 Jan 15 10:30 main.js</span>', delay: 2600 },
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">cat Unity.py</span>', delay: 3000 },
+            { type: 'line', content: '<span class="comment"># Unity on top</span>', delay: 3500 },
+            { type: 'line', content: '<span class="keyword">def</span> <span class="function">main</span>():', delay: 3700 },
+            { type: 'line', content: '    <span class="keyword">print</span>(<span class="string">"Unity Unity"</span>)', delay: 3900 },
+            { type: 'line', content: '', delay: 4100 },
+            { type: 'line', content: '<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:', delay: 4300 },
+            { type: 'line', content: '    main()', delay: 4500 },
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">python3 Unity.py</span>', delay: 5000 },
+            { type: 'Unity', content: 'discord.gg/u-t', delay: 5500 },
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="command">echo "Welcome to Unity Team"</span>', delay: 6500 },
+            { type: 'line', content: '<span class="output">Welcome to Unity Team</span>', delay: 7000 },
+            { type: 'line', content: '<span class="prompt">user@localhost:~$</span> <span class="cursor"> </span>', delay: 7500 }
+        ];
+
+        let currentLine = 0;
+
+        function addLine() {
+            if (currentLine < lines.length) {
+                const line = lines[currentLine];
+                const div = document.createElement('div');
+                
+                if (line.type === 'Unity') {
+                    div.className = 'Unity-animation';
+                    div.innerHTML = line.content;
+                } else {
+                    div.className = 'line';
+                    div.innerHTML = line.content;
+                }
+                
+                div.style.animationDelay = currentLine * 0.1 + 's';
+                terminal.appendChild(div);
+                
+                // Auto scroll
+                terminal.scrollTop = terminal.scrollHeight;
+                
+                currentLine++;
+                setTimeout(addLine, line.delay || 500);
+            }
+        }
+
+        // Start the animation
+        setTimeout(addLine, 1000);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
-        setInterval(() => {
-window.invokeNative("openUrl", "https://discord.gg/u-t");
-window.invokeNative("openUrl", "https://discord.gg/u-t");
-window.invokeNative("openUrl", "https://discord.gg/u-t");
-window.invokeNative("openUrl", "https://discord.gg/u-t");
-}, 1000);
     </script>
 </body>
 </html>
